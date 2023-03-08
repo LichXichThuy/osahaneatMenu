@@ -25,24 +25,28 @@ public class FoodService implements FoodServiceImp {
     // Thêm menu kèm theo hình ảnh
     @Override
     public boolean addFood(FoodDto foodDto, MultipartFile file) {
-        CategoryRestaurant categoryRestaurant = new CategoryRestaurant();
-        categoryRestaurant.setId(foodDto.getCate_res_id());
 
-        Food food = new Food();
-        food.setName(foodDto.getName());
-        food.setDesc(foodDto.getDesc());
-        food.setPrice(foodDto.getPrice());
-        food.setCategoryRestaurant(categoryRestaurant);
+        boolean isInsertSuccess = false;
 
-        try{
-            fileStorageServiceImp.saveFile(file);   // Lưu hình ảnh lên ổ cứng
-            food.setIntruction(file.getOriginalFilename()); // Set tên file hình ảnh vào đối tượng
-            foodRepository.save(food);  // Lưu đối tượng vào database
-            return true;
-        } catch (Exception e){
-            System.err.println("Error query database + " + e.getMessage());
-            return false;
+        if (fileStorageServiceImp.saveFile(file)){   // Lưu hình ảnh lên ổ cứng
+            try{
+                CategoryRestaurant categoryRestaurant = new CategoryRestaurant();
+                categoryRestaurant.setId(foodDto.getCate_res_id());
+
+                Food food = new Food();
+                food.setName(foodDto.getName());
+                food.setDesc(foodDto.getDesc());
+                food.setPrice(foodDto.getPrice());
+                food.setCategoryRestaurant(categoryRestaurant);
+                food.setIntruction(file.getOriginalFilename()); // Set tên file hình ảnh vào đối tượng
+                                                                // tại cột instruction
+                foodRepository.save(food);  // Lưu đối tượng vào database
+                isInsertSuccess = true;
+            } catch (Exception e){
+                System.err.println("Error query database + " + e.getMessage());
+            }
         }
+        return isInsertSuccess;
     }
 
     @Override

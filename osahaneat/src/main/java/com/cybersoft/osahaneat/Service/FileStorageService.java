@@ -33,13 +33,12 @@ public class FileStorageService implements FileStorageServiceImp {
 
     private void init(){
         root = Paths.get(path);
-
-        if (!Files.exists(root)){
-            try {
+        try {
+            if (!Files.exists(root)){
                 Files.createDirectories(root);
-            } catch (Exception e){
-                System.err.println("Error create root folder + " + e.getMessage());
             }
+        } catch (Exception e){
+            System.err.println("Error create root folder + " + e.getMessage());
         }
     }
 

@@ -10,8 +10,4 @@ import java.util.List;
 @Repository
 public interface FoodRepository extends JpaRepository<Food, Integer> {
     Food findByName(String name);
-
-    @Query(value = "select * from food", nativeQuery = true)
-    List<Food> findAll();
-
 }
